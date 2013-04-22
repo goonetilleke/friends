@@ -1,4 +1,4 @@
-public class Node{
+public class Vertex{
   
   String name;
   boolean inSchool;
@@ -7,7 +7,7 @@ public class Node{
   int dfsNum;
   Node next;
   
-  public Node(String name, String inSchool, String schoolName, Node next){
+  public Vertex(String name, String inSchool, String schoolName, Node next){
     this.name = name; 
     this.inSchool = inSchool;
     this.schoolName = schoolName;
