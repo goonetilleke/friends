@@ -24,7 +24,7 @@ public class Friends{
       }
       
       //Gets the cliques from the original graph
-      public static Vertex[] cliques(){
+      public static Vertex[] cliques(String school){
         
       }
       
