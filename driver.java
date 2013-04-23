@@ -1,6 +1,6 @@
-public class driver{
+import java.io.BufferedReader;
 
-  public driver(){
+public class driver{
     
     public staatic void main(String[] args)
     throws IOExcepetion{
@@ -11,9 +11,12 @@ public class driver{
       System.out.print("Enter deck file name");
       
       Scanner sc = new Scanner(new File(br.readLine()));
-      friend.makeVertex(); 
-
-
-    }
+    
+      /*This method will call the make vertex method for each line
+      *The make vertex method should turn the string into a node and then input the node into the adjLL
+      */
+      while(sc.hasNext(){
+         friend.makeVertex(sc.next());
+      }
   }
 }
