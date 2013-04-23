@@ -10,6 +10,8 @@ public class Friends{
 
       //This method will take the input from the scanner and put it into a node.
       //After creating a node, we should call the build method to build the adjLL.
+      //So every time we make a new node we will insert it into the adjLL
+      //w.c big O = O(n) i think...
       public static void makeVertex(Scanner sc){
         
         
