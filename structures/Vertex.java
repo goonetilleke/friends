@@ -1,3 +1,4 @@
+package Friend;
 public class Vertex{
   
   String name;
@@ -5,14 +6,14 @@ public class Vertex{
   String schoolName;
   boolean visited;
   int dfsNum;
-  Node next;
+  Vertex next;
   
-  public Vertex(String name, String inSchool, String schoolName, Node next){
+  public Vertex(String name, boolean inSchool, String schoolName, Vertex next){
     this.name = name; 
     this.inSchool = inSchool;
     this.schoolName = schoolName;
     this.next = next;
-    this.dfsnum = -1;
+    this.dfsNum = -1;
     this.visited = false; 
 
   }
