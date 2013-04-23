@@ -7,6 +7,14 @@ public class Friends{
       //initiallized the adjLL with the int from the 1st line read by the scanner
       adjLL = new Vertex[sc.nextInt()]; 
 
+
+      //This method will take the input from the scanner and put it into a node.
+      //After creating a node, we should call the build method to build the adjLL.
+      public static void makeVertex(Scanner sc){
+        
+        
+      }
+
       //This method builds the adjacency Linked List
       public static void build(Vertex friend){
   
