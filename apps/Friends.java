@@ -33,7 +33,10 @@ public class Friends{
     		school= subSplits[3];
     	 }
     	  Vertex v=new Vertex(name, inSchool,school);
-    	  //calls build vertex to fill the adjLL with the vertex
+    	  //calls build to fill the adjLL with the vertexs. 
+    	  //We have to figure out what to do with the relationships though.
+    	  //Maybe have a hastable that has the person's name and then a vertex object of all their
+    	  //information like what school they go to, etc.
     	  build(v);
       }
 
