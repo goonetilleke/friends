@@ -18,9 +18,9 @@ public class Friends{
       //So every time we make a new node we will insert it into the adjLL
       //w.c big O = O(n) i think...
       public void makeVertex(String s){
-    	  String input=s;
-    	  String splitVal="|";
-    	  String[] subSplits =  input.split(splitVal);
+    	 String input=s;
+    	 String splitVal="|";
+    	 String[] subSplits =  input.split(splitVal);
     	 String name= subSplits[1];
     	 boolean inSchool;
     	 if (subSplits[2].equals("y")){
@@ -33,13 +33,17 @@ public class Friends{
     		school= subSplits[3];
     	 }
     	  Vertex v=new Vertex(name, inSchool,school);
-
+    	  //calls build vertex to fill the adjLL with the vertex
+    	  build(v);
       }
 
       //This method builds the adjacency Linked List
       public void build(Vertex friend){
   
-  
+  	//gets vertex and fills adjLL with the name of each person
+  	for(int i = 0; i<adjLL.length; i++){
+  		adjLL[i] = friend;
+  	}
       }
       
       //This method will get the subgraph from the built adjLL
