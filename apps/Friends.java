@@ -7,10 +7,14 @@ public class Friends{
   //Scanner sc;
   Vertex[] adjLL; 
   
+  HashMap<String, Vertex> ppl; 
+  
   public Friends(int size){
     //this.sc=sc;
       //initiallized the adjLL with the int from the 1st line read by the scanner
       adjLL = new Vertex[size]; 
+      //initializes a new hashmap to keep track of people
+      ppl = new HashMap<String, Vertex>(1000, 2.0f);
 
   }
       //This method will take the input from the scanner and put it into a node.
@@ -38,6 +42,7 @@ public class Friends{
     	  //Maybe have a hastable that has the person's name and then a vertex object of all their
     	  //information like what school they go to, etc.
     	  build(v);
+ 
       }
 
       //This method builds the adjacency Linked List
