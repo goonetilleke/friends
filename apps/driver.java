@@ -10,7 +10,7 @@ public class driver {
 	public static  void main(String[] args)
     throws IOException{
       
-      Friends friend = new Friends();
+      
       
       BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
       System.out.print("Enter text file name");
@@ -21,8 +21,11 @@ public class driver {
       *The make vertex method should turn the string into a node and then input the node into the adjLL
       */
       int size = sc.nextInt(); 
+      //I put friends after so we can take the size given and put it as a paremeter 
+      Friends friend = new Friends(size);
       for(int i = 1; i<size; i++){
-          friend.makeVertex(sc);
+      	//take next line from scanner as parameter so its a string and not giving the scanner hope its ok
+          friend.makeVertex(sc.nextLine());
           System.out.println("sending scanner for loop");
       }
       
