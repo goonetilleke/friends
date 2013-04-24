@@ -17,7 +17,22 @@ public class Friends{
       //After creating a node, we should call the build method to build the adjLL.
       //So every time we make a new node we will insert it into the adjLL
       //w.c big O = O(n) i think...
-      public void makeVertex(Scanner sc){
+      public void makeVertex(String s){
+    	  String input=s;
+    	  String splitVal="|";
+    	  String[] subSplits =  input.split(splitVal);
+    	 String name= subSplits[1];
+    	 boolean inSchool;
+    	 if (subSplits[2].equals("y")){
+    		 inSchool=true;
+    	 } else{
+    		 inSchool=false;
+    	 }
+    	 String school=null;
+    	 if (inSchool==true){
+    		school= subSplits[3];
+    	 }
+    	  Vertex v=new Vertex(name, inSchool,school);
 
       }
 
