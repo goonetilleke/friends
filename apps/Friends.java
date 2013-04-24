@@ -7,10 +7,10 @@ public class Friends{
   //Scanner sc;
   Vertex[] adjLL; 
   
-  public Friends(){
+  public Friends(int size){
     //this.sc=sc;
       //initiallized the adjLL with the int from the 1st line read by the scanner
-      adjLL = new Vertex[15]; 
+      adjLL = new Vertex[size]; 
 
   }
       //This method will take the input from the scanner and put it into a node.
