@@ -51,9 +51,16 @@ public class Friends {
 								// name
 			adjLL[i] = v; // puts the node into the adjLL
 		}
-
+		
+		//adding the neighbors to the adjLL
 		String name1 = subSplits[1];
 		String name2 = subSplits[2];
+		
+		int v1 = index.get(name1); //name1
+		int v2 = index.get(name2); //name2
+		
+		adjLL[v1].neighbors = new Neighbor(name2, adjLL[v1].neighbors);
+		adjLL[v2].neighbors = new Neighbor(name1, adjLL[v2].neighbors);
 
 	}
 
