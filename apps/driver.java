@@ -64,8 +64,7 @@ public class driver {
 		System.out.print("\tEnter Choice => ");
 		int n = Integer.parseInt(br.readLine());
 		while (n < 1 || n > 5) {
-			System.out
-					.print("\tYour choice must be between 1 and 5, reenter => ");
+			System.out.print("\tYour choice must be between 1 and 5, reenter => ");
 		}
 		System.out.println();
 		return n;
