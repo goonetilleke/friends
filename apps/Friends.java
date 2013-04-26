@@ -1,4 +1,3 @@
-
 package Friend;
 
 import java.util.ArrayList;
@@ -79,13 +78,34 @@ public class Friends {
 
 	// This method will get the subgraph from the built adjLL
 	public Vertex[] subgraph(String school) {
+		Vertex[] subgraph = new Vertex[students.get(school).size()];
 		if (students.containsKey(school)){
 			//make temp array of arraylist in students hashtable
-			ArrayList<String> temp=students.get(school);
+			ArrayList<String> temp = students.get(school);
+			for(int i = 0; i <= temp.size(); i++){
+				String key = temp.get(i);
+				int ind = index.get(key);
+				//name, inschool, schoolname, nbr
+				Vertex v = new Vertex(key, true, school, null);
+				subgraph[i] = v;
+			}
 		} else{
 			return null;
 		}
 		
+		for(int j = 0; j<subgraph.length; j++){
+			String name = subgraph[j].name;
+			int curr = index.get(name);
+			Neighbor ptr = adjLL[curr].neighbors; 
+			while(ptr != null){
+				if(ptr){
+					
+				}
+				ptr = ptr.neighbors; 
+			}
+			
+			
+		}
 		return adjLL;
 
 	}
