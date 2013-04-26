@@ -1,15 +1,21 @@
+
 package Friend;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Set;
 
+
+
+
 public class Friends {
 	// Scanner sc;
 	Vertex[] adjLL;
-
+	//might get rid of ppl 
 	HashMap<String, Vertex> ppl;
 	HashMap<String, Integer> index;
+	HashMap<String, ArrayList<String>> students;
 	int numVertex;
 
 	public Friends(int size) {
@@ -29,7 +35,10 @@ public class Friends {
 		String input = s;
 		String splitVal = "|";
 		String[] subSplits = input.split(splitVal);
-		if (i <= numVertex) { // adds vertex into adjLL until i == number from
+		students = new HashMap<String, ArrayList<String>>();
+		ArrayList<String> temp=new ArrayList<String>();
+		
+ 		if (i <= numVertex) { // adds vertex into adjLL until i == number from
 								// 1st line
 			String name = subSplits[1].toLowerCase();
 			boolean inSchool;
@@ -44,28 +53,39 @@ public class Friends {
 			if (inSchool == true) {
 				school = subSplits[3];
 			}
-
+			if (inSchool==true){
+			temp.add(name);
+			students.put(school, temp);
+			
+			}
 			Vertex v = new Vertex(name, inSchool, school, null);
 			ppl.put(name, v); // puts vertex into hashtable, key is person name
 			index.put(name, i); // puts index of person in adjLL, key is person
 								// name
 			adjLL[i] = v; // puts the node into the adjLL
 		}
-		
+
 		//adding the neighbors to the adjLL
 		String name1 = subSplits[1];
 		String name2 = subSplits[2];
-		
+
 		int v1 = index.get(name1); //name1
 		int v2 = index.get(name2); //name2
-		
+
 		adjLL[v1].neighbors = new Neighbor(name2, adjLL[v1].neighbors);
 		adjLL[v2].neighbors = new Neighbor(name1, adjLL[v2].neighbors);
 
 	}
 
 	// This method will get the subgraph from the built adjLL
-	public Vertex[] subgraph() {
+	public Vertex[] subgraph(String school) {
+		if (students.containsKey(school)){
+			//make temp array of arraylist in students hashtable
+			ArrayList<String> temp=students.get(school);
+		} else{
+			return null;
+		}
+		
 		return adjLL;
 
 	}
