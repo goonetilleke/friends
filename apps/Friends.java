@@ -77,16 +77,16 @@ public class Friends {
 	}
 
 	// This method will get the subgraph from the built adjLL
-	public Vertex[] subgraph(String school) {
-		Vertex[] subgraph = new Vertex[students.get(school).size()];
-		if (students.containsKey(school)){
+	public Vertex[] subgraph(String s) {
+		Vertex[] subgraph = new Vertex[students.get(s).size()];
+		if (students.containsKey(s)){
 			//make temp array of arraylist in students hashtable
-			ArrayList<String> temp = students.get(school);
+			ArrayList<String> temp = students.get(s);
 			for(int i = 0; i <= temp.size(); i++){
 				String key = temp.get(i);
-				int ind = index.get(key);
+				//int ind = index.get(key);
 				//name, inschool, schoolname, nbr
-				Vertex v = new Vertex(key, true, school, null);
+				Vertex v = new Vertex(key, true, s, null);
 				subgraph[i] = v;
 			}
 		} else{
@@ -98,10 +98,15 @@ public class Friends {
 			int curr = index.get(name);
 			Neighbor ptr = adjLL[curr].neighbors; 
 			while(ptr != null){
-				if(ptr){
-					
+				String person = ptr.name;
+				if(ppl.get(person).schoolName.equalsIgnoreCase(s)){
+					if(subgraph[j].neighbors == null){
+						subgraph[j].neighbors = ptr;
+					}else{
+						subgraph[j].neighbors.next = ptr; 
+					}
 				}
-				ptr = ptr.neighbors; 
+				ptr = ptr.next; 
 			}
 			
 			
