@@ -123,9 +123,29 @@ public class Friends {
 	}
 
 	// Gets the cliques from the original graph
-	public Vertex[] cliques(String school) {
-		return adjLL;
+	public Vertex[] cliques(String school, boolean[] visited) {
+		Vertex[] temp = subgraph(school);
+		Vertex[] result = new Vertex[100]; //change this later
+		int v = 0; 
+		int counter = 0; 
+		dfs(v, visited, temp, result, school, counter);
+		return result;
 
+	}
+	
+	//ask if helper methods can return stuff and be public
+	private void dfs(int v, boolean[] visited, Vertex[] subgraph, Vertex[] result, String school, int counter){
+		
+		visited[v] = true;
+		for(Neighbor e = adjLL[v].neighbors; e != null; e = e.next){
+			if(!visited[index.get(e.name)]){
+				//name, inschool, schoolname, neighbor
+				counter++; 
+				result[v] = new Vertex(subgraph[v].name, true, school, e);
+				dfs(index.get(e.name), visited, subgraph, result, school, counter);
+			}
+		}
+		
 	}
 
 	// This method checks to see if a person is a "connecot" and then it returns
