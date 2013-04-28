@@ -38,14 +38,17 @@ public class driver {
 		while ((choice = getChoice()) != 5) {
 			switch (getChoice()) {
 			case 1:
-				friend.subgraph();
+				System.out.println("Enter school");
+				Scanner sc1 = new Scanner(System.in);
+				String input = sc1.nextLine();
+				friend.subgraph(input);
 				break;
 			case 2:
 				friend.shortestPath();
 				break;
 			// check cliques later!!!!!!!!!!!!!!!!!
 			case 3:
-				friend.cliques(null);
+				friend.cliques(null, null);
 				break;
 			case 4:
 				friend.connectors();
@@ -64,7 +67,8 @@ public class driver {
 		System.out.print("\tEnter Choice => ");
 		int n = Integer.parseInt(br.readLine());
 		while (n < 1 || n > 5) {
-			System.out.print("\tYour choice must be between 1 and 5, reenter => ");
+			System.out
+					.print("\tYour choice must be between 1 and 5, reenter => ");
 		}
 		System.out.println();
 		return n;
