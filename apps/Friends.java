@@ -6,8 +6,6 @@ import java.util.Iterator;
 import java.util.Set;
 
 
-
-
 public class Friends {
 	// Scanner sc;
 	Vertex[] adjLL;
@@ -39,10 +37,9 @@ public class Friends {
 		
  		if (i <= numVertex) { // adds vertex into adjLL until i == number from
 								// 1st line
-			String name = subSplits[1].toLowerCase();
+			String name = subSplits[0].toLowerCase();
 			boolean inSchool;
-
-			if (subSplits[2].equals("y")) {
+			if(subSplits[1].equals("y")) {
 				inSchool = true;
 			} else {
 				inSchool = false;
@@ -50,7 +47,7 @@ public class Friends {
 
 			String school = null;
 			if (inSchool == true) {
-				school = subSplits[3];
+				school = subSplits[2];
 			}
 			if (inSchool==true){
 			temp.add(name);
@@ -65,8 +62,8 @@ public class Friends {
 		}
 
 		//adding the neighbors to the adjLL
-		String name1 = subSplits[1];
-		String name2 = subSplits[2];
+		String name1 = subSplits[0];
+		String name2 = subSplits[1];
 
 		int v1 = index.get(name1); //name1
 		int v2 = index.get(name2); //name2
@@ -208,5 +205,15 @@ public class Friends {
 	public String connectors() {
 		return null;
 
+	}
+	
+	private void printBuild(){
+		Vertex[] temp = adjLL; 
+		for(int i =0; i< temp.length; i++){			
+			Neighbor ptr = temp[i].neighbors;
+			while(ptr != null){
+				System.out.println(temp[i] + "|" + ptr.name);
+			}
+		}
 	}
 }
