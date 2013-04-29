@@ -6,29 +6,40 @@ import java.util.Scanner;
 public class driver {
 
 	static BufferedReader br;
+	private static Scanner sc;
 
 	public static void main(String[] args) throws IOException {
 
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		System.out.print("Enter text file name");
+		System.out.println("Enter text file name");
 
-		Scanner sc = new Scanner(new File(br.readLine()));
+		sc = new Scanner(new File(br.readLine()));
 
 		/*
 		 * This method will call the make vertex method for each lineThe make
 		 * vertex method should turn the string into a node and then input the
 		 * node into the adjLL
 		 */
-		int size = sc.nextInt();
+		//int size = sc.nextLine(); 
 		// I put friends after so we can take the size given and put it as a
 		// paremeter
-		Friends friend = new Friends(size);
+		//Friends friend = new Friends(size);
 
 		// Changed the for loop to a while loop. This will loop through the
 		// whole text file
+		Friends friend = null; 
 		while (sc.hasNextLine()) {
-			int counter = 1;
-			friend.build(sc.nextLine(), counter);
+			boolean flag = false;
+			if(flag == false){
+				flag = true;
+				String size = sc.nextLine();
+				int val = Integer.parseInt(size); 
+				friend = new Friends(val); 
+			}
+			int counter = 0;
+			String s = sc.nextLine();
+			System.out.print(s); 
+			friend.build(s, counter);
 			counter++;
 			System.out.println("sending scanner for loop");
 		}
@@ -44,7 +55,12 @@ public class driver {
 				friend.subgraph(input);
 				break;
 			case 2:
-				friend.shortestPath();
+				System.out.println("Enter start name");
+				Scanner sc2 = new Scanner(System.in);
+				String input1 = sc2.nextLine();
+				System.out.println("Enter ending name");
+				String input2 = sc2.nextLine();
+				friend.shortestPath(input1, input2);
 				break;
 			// check cliques later!!!!!!!!!!!!!!!!!
 			case 3:
