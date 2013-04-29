@@ -117,9 +117,64 @@ public class Friends {
 
 	// This method gets the shortest Path from two friends and returns the head
 	// of the linked list
-	public Vertex shortestPath() {
-		return null;
-
+	public String shortestPath(String start, String end) {
+		ArrayList<Integer> counters = new ArrayList<Integer>();
+		ArrayList<Boolean> visited = new ArrayList<Boolean>();
+		ArrayList<String> shortestPaths=new ArrayList<String>();
+		Queue<String> q = new Queue<String>();
+		boolean flag=false;
+		
+		int x = index.get(start);
+		visited.set(x, true); 
+		q.enqueue(start);
+		while(!q.isEmpty()){
+			String w = q.dequeue();
+			int j = index.get(w);
+			Neighbor ptr = adjLL[j].neighbors;
+			while(ptr != null){
+				if(!visited.get(x)){
+					
+					int temp = counters.get(x);
+					temp = temp++;
+					counters.set(x, temp); 
+					int currIndex = index.get(ptr); //look over
+					visited.set(currIndex, true);
+					if (!(ptr.name.equals(end))){
+						ptr.visitedNames=w;
+						if (flag==false){
+							flag=true;
+							shortestPaths.set(currIndex, ptr.visitedNames);
+						}
+						else{
+						shortestPaths.set(currIndex, "--".concat(ptr.visitedNames));
+						}
+					}
+					String currName = ptr.name; 
+					q.enqueue(currName);
+					ptr = ptr.next;
+				}
+			}
+			
+		}
+		int smallestPathIndex=0;
+		for(int z = 0; z<counters.size(); z++){
+			int smallestNum = counters.get(z);
+			if(counters.get(z) < smallestNum){
+				smallestPathIndex=z;
+				smallestNum = counters.get(z);
+				
+			}
+		}
+		
+		
+		String shortestPath=shortestPaths.get(smallestPathIndex);
+		
+		return shortestPath;
+		/*we have to add:
+		 * if found, break
+		 * adding the shortest path to a data structure
+		 * 
+		 */
 	}
 
 	// Gets the cliques from the original graph
