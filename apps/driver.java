@@ -20,41 +20,33 @@ public class driver {
 		 * vertex method should turn the string into a node and then input the
 		 * node into the adjLL
 		 */
-		//int size = sc.nextLine(); 
-		// I put friends after so we can take the size given and put it as a
-		// paremeter
-		//Friends friend = new Friends(size);
-
-		// Changed the for loop to a while loop. This will loop through the
-		// whole text file
-		Friends friend = null; 
+		Friends friend = null;
+		boolean flag = false;
+		int counter = 0;
 		while (sc.hasNextLine()) {
-			boolean flag = false;
-			if(flag == false){
+			if (flag == false) {
 				flag = true;
 				String size = sc.nextLine();
-				int val = Integer.parseInt(size); 
-				friend = new Friends(val); 
+				int val = Integer.parseInt(size);
+				friend = new Friends(val);
 			}
-			int counter = 0;
+
 			String s = sc.nextLine();
-			System.out.print(s); 
+			System.out.println(s);
 			friend.build(s, counter);
 			counter++;
-			System.out.println("sending scanner for loop");
 		}
-
 		br = new BufferedReader(new InputStreamReader(System.in));
 		int choice;
 		while ((choice = getChoice()) != 5) {
 			switch (getChoice()) {
-			case 1:
+			case 1:// subgraph
 				System.out.println("Enter school");
 				Scanner sc1 = new Scanner(System.in);
 				String input = sc1.nextLine();
 				friend.subgraph(input);
 				break;
-			case 2:
+			case 2:// shortest path
 				System.out.println("Enter start name");
 				Scanner sc2 = new Scanner(System.in);
 				String input1 = sc2.nextLine();
@@ -63,10 +55,10 @@ public class driver {
 				friend.shortestPath(input1, input2);
 				break;
 			// check cliques later!!!!!!!!!!!!!!!!!
-			case 3:
+			case 3: // cliques
 				friend.cliques(null, null);
 				break;
-			case 4:
+			case 4:// connectors
 				friend.connectors();
 				break;
 			}
@@ -81,10 +73,10 @@ public class driver {
 		System.out.println("4. connectors");
 		System.out.println("5. to quit");
 		System.out.print("\tEnter Choice => ");
-		int n = Integer.parseInt(br.readLine());
+		Scanner in = new Scanner(System.in);
+		int n = in.nextInt(); 
 		while (n < 1 || n > 5) {
-			System.out
-					.print("\tYour choice must be between 1 and 5, reenter => ");
+			System.out.print("\tYour choice must be between 1 and 5, reenter => ");
 		}
 		System.out.println();
 		return n;
