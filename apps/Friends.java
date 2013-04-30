@@ -23,6 +23,7 @@ public class Friends {
 		// initializes a new hashmap to keep track of people
 		ppl = new HashMap<String, Vertex>(1000, 2.0f);
 		index = new HashMap<String, Integer>(1000, 2.0f);
+		students = new HashMap<String, ArrayList<String>>(1000, 2.0f); 
 
 	}
 
@@ -30,8 +31,6 @@ public class Friends {
 	public void build(String s, int i) {
 		String input = s;
 		String[] subSplits = input.split("\\|");
-		students = new HashMap<String, ArrayList<String>>();
-		ArrayList<String> temp = new ArrayList<String>();
 
 		if (i < numVertex) { // adds vertex into adjLL until i == number from
 								// 1st line
@@ -46,11 +45,16 @@ public class Friends {
 			String school = null;
 			if (inSchool == true) {
 				school = subSplits[2];
-			}
-			if (inSchool == true) {
-				temp.add(name);
-				students.put(school, temp);
-
+				if(!students.containsKey(school)){ //if school name is already in the hashtable
+					ArrayList<String> temp = new ArrayList<String>();
+					String nameForHT = name;
+					temp.add(nameForHT);
+					students.put(school, temp);
+					
+				}else{//if school name is not in the hashtable
+					String nameForHT = name; 
+					students.get(school).add(nameForHT);
+				}
 			}
 			Vertex v = new Vertex(name, inSchool, school, null);
 			ppl.put(name, v); // puts vertex into hashtable, key is person name
@@ -73,40 +77,45 @@ public class Friends {
 	}
 
 	// This method will get the subgraph from the built adjLL
-	public Vertex[] subgraph(String s) {
-		Vertex[] subgraph = new Vertex[students.get(s).size()];
+	public ArrayList<Vertex> subgraph(String s) {
+		ArrayList<Vertex> subgraph = new ArrayList<Vertex>(students.get(s).size());
+
 		if (students.containsKey(s)) {
 			// make temp array of arraylist in students hashtable
 			ArrayList<String> temp = students.get(s);
-			for (int i = 0; i <= temp.size(); i++) {
+			for (int i = 0; i < temp.size(); i++) {
 				String key = temp.get(i);
 				// int ind = index.get(key);
 				// name, inschool, schoolname, nbr
 				Vertex v = new Vertex(key, true, s, null);
-				subgraph[i] = v;
+				subgraph.add(i, v);
 			}
 		} else {
 			return null;
 		}
 
-		for (int j = 0; j < subgraph.length; j++) {
-			String name = subgraph[j].name;
+		for (int j = 0; j < subgraph.size(); j++) {
+			//String name = subgraph[j].name;
+			String name = subgraph.get(j).name; 
 			int curr = index.get(name);
 			Neighbor ptr = adjLL[curr].neighbors;
 			while (ptr != null) {
 				String person = ptr.name;
+				if(ppl.get(person).inSchool == false){
+					continue; 
+				}
 				if (ppl.get(person).schoolName.equalsIgnoreCase(s)) {
-					if (subgraph[j].neighbors == null) {
-						subgraph[j].neighbors = ptr;
+					if (subgraph.get(j).neighbors == null) {
+						subgraph.get(j).neighbors = ptr; 
 					} else {
-						subgraph[j].neighbors.next = ptr;
+						subgraph.get(j).neighbors.next = ptr; 
 					}
 				}
 				ptr = ptr.next;
 			}
 
 		}
-		return adjLL;
+		return subgraph;
 
 	}
 
@@ -171,9 +180,9 @@ public class Friends {
 	}
 
 	// Gets the cliques from the original graph
-	public Vertex[] cliques(String school, boolean[] visited) {
-		Vertex[] temp = subgraph(school);
-		Vertex[] result = new Vertex[100]; // change this later
+	public ArrayList<Vertex> cliques(String school, boolean[] visited) {
+		ArrayList<Vertex> temp = subgraph(school);
+		ArrayList<Vertex> result = new ArrayList<Vertex>(); // change this later
 		int v = 0;
 		int counter = 0;
 		dfs(v, visited, temp, result, school, counter);
@@ -182,15 +191,15 @@ public class Friends {
 	}
 
 	// ask if helper methods can return stuff and be public
-	private void dfs(int v, boolean[] visited, Vertex[] subgraph,
-			Vertex[] result, String school, int counter) {
+	private void dfs(int v, boolean[] visited, ArrayList<Vertex> temp,
+			ArrayList<Vertex> result, String school, int counter) {
 		visited[v] = true;
 		for (Neighbor e = adjLL[v].neighbors; e != null; e = e.next) {
 			if (!visited[index.get(e.name)]) {
 				// name, inschool, schoolname, neighbor
 				counter++;
-				result[v] = new Vertex(subgraph[v].name, true, school, e);
-				dfs(index.get(e.name), visited, subgraph, result, school,
+				result.add(v, new Vertex(temp.get(v).name, true, school, e)); 
+				dfs(index.get(e.name), visited, temp, result, school,
 						counter);
 			}
 		}
