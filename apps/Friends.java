@@ -23,7 +23,7 @@ public class Friends {
 		// initializes a new hashmap to keep track of people
 		ppl = new HashMap<String, Vertex>(1000, 2.0f);
 		index = new HashMap<String, Integer>(1000, 2.0f);
-		students = new HashMap<String, ArrayList<String>>(1000, 2.0f); 
+		students = new HashMap<String, ArrayList<String>>(1000, 2.0f);
 
 	}
 
@@ -45,14 +45,16 @@ public class Friends {
 			String school = null;
 			if (inSchool == true) {
 				school = subSplits[2];
-				if(!students.containsKey(school)){ //if school name is already in the hashtable
+				if (!students.containsKey(school)) { // if school name is
+														// already in the
+														// hashtable
 					ArrayList<String> temp = new ArrayList<String>();
 					String nameForHT = name;
 					temp.add(nameForHT);
 					students.put(school, temp);
-					
-				}else{//if school name is not in the hashtable
-					String nameForHT = name; 
+
+				} else {// if school name is not in the hashtable
+					String nameForHT = name;
 					students.get(school).add(nameForHT);
 				}
 			}
@@ -95,21 +97,18 @@ public class Friends {
 		}
 
 		for (int j = 0; j < subgraph.size(); j++) {
-			//String name = subgraph[j].name;
-			String name = subgraph.get(j).name; 
+			// String name = subgraph[j].name;
+			String name = subgraph.get(j).name;
 			int curr = index.get(name);
 			Neighbor ptr = adjLL[curr].neighbors;
 			while (ptr != null) {
 				String person = ptr.name;
-				if(ppl.get(person).inSchool == false){
-					continue; 
+				if (ppl.get(person).inSchool == false) {
+					ptr = ptr.next;
+					continue;
 				}
 				if (ppl.get(person).schoolName.equalsIgnoreCase(s)) {
-					if (subgraph.get(j).neighbors == null) {
-						subgraph.get(j).neighbors = ptr; 
-					} else {
-						subgraph.get(j).neighbors.next = ptr; 
-					}
+					subgraph.get(j).neighbors = new Neighbor(person, subgraph.get(j).neighbors); 
 				}
 				ptr = ptr.next;
 			}
@@ -180,37 +179,74 @@ public class Friends {
 	}
 
 	// Gets the cliques from the original graph
-	public ArrayList<Vertex> cliques(String school, boolean[] visited) {
+	public ArrayList<Vertex> cliques(String school) {
 		ArrayList<Vertex> temp = subgraph(school);
 		ArrayList<Vertex> result = new ArrayList<Vertex>(); // change this later
-		int v = 0;
-		int counter = 0;
-		dfs(v, visited, temp, result, school, counter);
+		boolean[] ret = new boolean[temp.size()];
+		boolean[] visit = new boolean[temp.size()]; 
+		HashMap<String, Integer> subgraphIndex = new HashMap<String, Integer>(1000, 2.0f); 
+		
+		//Makes a hashmap for the subgraph. We can easily access a person's index in the subgraph now. 
+		for(int i=0; i<temp.size(); i++){
+			subgraphIndex.put(temp.get(i).name, i);
+			//name, inschool, schoolname, nbr
+			Vertex vert = new Vertex(temp.get(i).name, true, school, null); 
+			result.add(vert); 
+		}
+		
+		//goes through every vertex and calls dfs
+		for (int v=0; v < visit.length; v++) {
+			if (!visit[v]) {
+				dfs(v, visit, temp, result, school, ret, subgraphIndex);
+			}
+		}
 		return result;
 
 	}
 
-	// ask if helper methods can return stuff and be public
-	private void dfs(int v, boolean[] visited, ArrayList<Vertex> temp,
-			ArrayList<Vertex> result, String school, int counter) {
-		visited[v] = true;
-		for (Neighbor e = adjLL[v].neighbors; e != null; e = e.next) {
-			if (!visited[index.get(e.name)]) {
-				// name, inschool, schoolname, neighbor
-				counter++;
-				result.add(v, new Vertex(temp.get(v).name, true, school, e)); 
-				dfs(index.get(e.name), visited, temp, result, school,
-						counter);
+	private void dfs(int v, boolean[] visit, ArrayList<Vertex> temp,
+			ArrayList<Vertex> result, String school, boolean[] ret, HashMap<String, Integer> subgraphIndex) {
+		visit[v] = true;
+		for (Neighbor e = temp.get(v).neighbors; e != null; e = e.next) {
+			//check this if statement
+			if (!visit[subgraphIndex.get(e.name)]) {
+				result.get(v).neighbors = new Neighbor(e.name, result.get(v).neighbors);
+				dfs(subgraphIndex.get(e.name), visit, temp, result, school, ret, subgraphIndex);
 			}
 		}
-
+		//dfsDriver(visit);
 	}
-
+	
 	// This method checks to see if a person is a "connecot" and then it returns
 	// the name of that person.
 	public String connectors() {
+		ArrayList<Boolean> visitedConnectors=new ArrayList<Boolean>();
+		Vertex[] adjLLtemp=adjLL;
+		dfsConnectors(1, visitedConnectors, adjLLtemp);
 		return null;
 
+	}
+	public void dfsConnectors(int x, ArrayList<Boolean> visitedConnectors, Vertex[] adjacentLL) {
+		
+		for (int v=0; v < visitedConnectors.size(); v++) {
+			visitedConnectors.set(v,false);
+			
+		}
+		for (int v=0; v < visitedConnectors.size(); v++) {
+			if (!visitedConnectors.get(v)) {
+				adjacentLL[v].dfsNum=v;
+				adjacentLL[v].back=v;
+				dfsConnectors(v, visitedConnectors, adjacentLL);
+			}
+		}
+	}
+	//
+	private void dfsDriver(boolean[] visited) {
+		for(int i = 0; i<visited.length; i++){
+			if(!visited[i]){
+				dfs(i, visited, null, null, null, i); 
+			}
+		}
 	}
 
 	private void printBuild() {
