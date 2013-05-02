@@ -129,7 +129,6 @@ public class Friends {
 		String soFar = "";
 		boolean[] visited = new boolean[copy.length];
 		Queue<String> q = new Queue<String>();
-		String prev = start;
 		boolean flag = false;
 		int x = index.get(start);
 		visited[x] = true;
@@ -162,12 +161,8 @@ public class Friends {
 			}
 
 		}
-
+		
 		return null;
-		/*
-		 * we have to add: if found, break adding the shortest path to a data
-		 * structure
-		 */
 	}
 
 	// Gets the cliques from the original graph
@@ -199,9 +194,9 @@ public class Friends {
 
 	}
 
-	private void dfs(int v, boolean[] visit, ArrayList<Vertex> temp,
-			ArrayList<Vertex> result, String school, boolean[] ret,
+	private void dfs(int v, boolean[] visit, ArrayList<Vertex> temp, ArrayList<Vertex> result, String school, boolean[] ret, 
 			HashMap<String, Integer> subgraphIndex) {
+		
 		visit[v] = true;
 		for (Neighbor e = temp.get(v).neighbors; e != null; e = e.next) {
 			// check this if statement
