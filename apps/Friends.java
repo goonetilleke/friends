@@ -32,8 +32,7 @@ public class Friends {
 		String input = s;
 		String[] subSplits = input.split("\\|");
 
-		if (i < numVertex) { // adds vertex into adjLL until i == number from
-								// 1st line
+		if (i < numVertex) { // adds vertex into adjLL until i == number from 1st line
 			String name = subSplits[0].toLowerCase();
 			boolean inSchool;
 			if (subSplits[1].equals("y")) {
@@ -78,7 +77,8 @@ public class Friends {
 
 	// This method will get the subgraph from the built adjLL
 	public ArrayList<Vertex> subgraph(String s) {
-		ArrayList<Vertex> subgraph = new ArrayList<Vertex>(students.get(s).size());
+		ArrayList<Vertex> subgraph = new ArrayList<Vertex>(students.get(s)
+				.size());
 
 		if (students.containsKey(s)) {
 			// make temp array of arraylist in students hashtable
@@ -106,7 +106,8 @@ public class Friends {
 					continue;
 				}
 				if (ppl.get(person).schoolName.equalsIgnoreCase(s)) {
-					subgraph.get(j).neighbors = new Neighbor(person, subgraph.get(j).neighbors); 
+					subgraph.get(j).neighbors = new Neighbor(person,
+							subgraph.get(j).neighbors);
 				}
 				ptr = ptr.next;
 			}
@@ -119,40 +120,40 @@ public class Friends {
 	// This method gets the shortest Path from two friends and returns the head
 	// of the linked list
 	public String shortestPath(String start, String end) {
-		if(start.equalsIgnoreCase(end)){
+		if (start.equalsIgnoreCase(end)) {
 			System.out.println("Entered same name twice");
 			return null;
 		}
-		
-		Vertex[] copy = adjLL; 
-		String soFar = ""; 
+
+		Vertex[] copy = adjLL;
+		String soFar = "";
 		boolean[] visited = new boolean[copy.length];
 		Queue<String> q = new Queue<String>();
-		String prev = start; 
-		boolean flag = false; 
+		String prev = start;
+		boolean flag = false;
 		int x = index.get(start);
 		visited[x] = true;
 		q.enqueue(start);
 		while (!q.isEmpty()) {
 			String curr = q.dequeue();
 			int indexInAdjLL = index.get(curr);
-			if(flag == false){
-				flag = true; 
-				copy[indexInAdjLL].path = copy[indexInAdjLL].path.concat(curr).trim(); 
-			}else{
+			if (flag == false) {
+				flag = true;
+				copy[indexInAdjLL].path = copy[indexInAdjLL].path.concat(curr).trim();
+			} else {
 				copy[indexInAdjLL].path = copy[indexInAdjLL].path.concat(soFar + "+" + curr).trim();
 			}
-			soFar = copy[indexInAdjLL].path; 
+			soFar = copy[indexInAdjLL].path;
 			Neighbor ptr = copy[indexInAdjLL].neighbors;
 			while (ptr != null) {
-				//if neighbor is not visited
-				int ptrIndex = index.get(ptr.name); 
-				if (visited[ptrIndex]==false) {
-					visited[ptrIndex] = true; 
+				// if neighbor is not visited
+				int ptrIndex = index.get(ptr.name);
+				if (visited[ptrIndex] == false) {
+					visited[ptrIndex] = true;
 					if ((ptr.name.equalsIgnoreCase(end))) {
-						System.out.println("FOUND"); 
+						System.out.println("FOUND");
 						copy[index.get(ptr.name)].path = copy[index.get(ptr.name)].path.concat(soFar + "+" + ptr.name).trim();
-						return copy[index.get(ptr.name)].path; 
+						return copy[index.get(ptr.name)].path;
 					}
 					String currName = ptr.name;
 					q.enqueue(currName);
@@ -174,68 +175,77 @@ public class Friends {
 		ArrayList<Vertex> temp = subgraph(school);
 		ArrayList<Vertex> result = new ArrayList<Vertex>(); // change this later
 		boolean[] ret = new boolean[temp.size()];
-		boolean[] visit = new boolean[temp.size()]; 
-		HashMap<String, Integer> subgraphIndex = new HashMap<String, Integer>(1000, 2.0f); 
-		
-		//Makes a hashmap for the subgraph. We can easily access a person's index in the subgraph now. 
-		for(int i=0; i<temp.size(); i++){
+		boolean[] visit = new boolean[temp.size()];
+		HashMap<String, Integer> subgraphIndex = new HashMap<String, Integer>(
+				1000, 2.0f);
+
+		// Makes a hashmap for the subgraph. We can easily access a person's
+		// index in the subgraph now.
+		for (int i = 0; i < temp.size(); i++) {
 			subgraphIndex.put(temp.get(i).name, i);
-			//name, inschool, schoolname, nbr
-			Vertex vert = new Vertex(temp.get(i).name, true, school, null); 
-			result.add(vert); 
+			// name, inschool, schoolname, nbr
+			Vertex vert = new Vertex(temp.get(i).name, true, school, null);
+			result.add(vert);
 		}
-		
-		//goes through every vertex and calls dfs
-		for (int v=0; v < visit.length; v++) {
+
+		// goes through every vertex and calls dfs
+		for (int v = 0; v < visit.length; v++) {
 			if (!visit[v]) {
 				dfs(v, visit, temp, result, school, ret, subgraphIndex);
 			}
 		}
-		//dfsDriver(); 
+		// dfsDriver();
 		return result;
 
 	}
 
 	private void dfs(int v, boolean[] visit, ArrayList<Vertex> temp,
-			ArrayList<Vertex> result, String school, boolean[] ret, HashMap<String, Integer> subgraphIndex) {
+			ArrayList<Vertex> result, String school, boolean[] ret,
+			HashMap<String, Integer> subgraphIndex) {
 		visit[v] = true;
 		for (Neighbor e = temp.get(v).neighbors; e != null; e = e.next) {
-			//check this if statement
+			// check this if statement
 			if (!visit[subgraphIndex.get(e.name)]) {
-				result.get(v).neighbors = new Neighbor(e.name, result.get(v).neighbors);
-				dfs(subgraphIndex.get(e.name), visit, temp, result, school, ret, subgraphIndex);
+				result.get(v).neighbors = new Neighbor(e.name,
+						result.get(v).neighbors);
+				dfs(subgraphIndex.get(e.name), visit, temp, result, school,
+						ret, subgraphIndex);
 			}
 		}
 	}
-	
-	// This method checks to see if a person is a "connector" and then it returns
+
+	// This method checks to see if a person is a "connector" and then it
+	// returns
 	// the name of that person.
 	public String connectors() {
-		ArrayList<Boolean> visitedConnectors=new ArrayList<Boolean>();
-		Vertex[] adjLLtemp=adjLL;
+		ArrayList<Boolean> visitedConnectors = new ArrayList<Boolean>();
+		Vertex[] adjLLtemp = adjLL;
 		dfsConnectors(1, visitedConnectors, adjLLtemp);
 		return null;
 
 	}
-	public void dfsConnectors(int x, ArrayList<Boolean> visitedConnectors, Vertex[] adjacentLL) {
-		
-		for (int v=0; v < visitedConnectors.size(); v++) {
-			visitedConnectors.set(v,false);
-			
+
+	public void dfsConnectors(int x, ArrayList<Boolean> visitedConnectors,
+			Vertex[] adjacentLL) {
+
+		for (int v = 0; v < visitedConnectors.size(); v++) {
+			visitedConnectors.set(v, false);
+
 		}
-		for (int v=0; v < visitedConnectors.size(); v++) {
+		for (int v = 0; v < visitedConnectors.size(); v++) {
 			if (!visitedConnectors.get(v)) {
-				adjacentLL[v].dfsNum=v;
-				adjacentLL[v].back=v;
+				adjacentLL[v].dfsNum = v;
+				adjacentLL[v].back = v;
 				dfsConnectors(v, visitedConnectors, adjacentLL);
 			}
 		}
 	}
+
 	//
 	private void dfsDriver(boolean[] visited) {
-		for(int i = 0; i<visited.length; i++){
-			if(!visited[i]){
-				dfs(i, visited, null, null, null, i); 
+		for (int i = 0; i < visited.length; i++) {
+			if (!visited[i]) {
+				dfs(i, visited, null, null, null, i);
 			}
 		}
 	}
