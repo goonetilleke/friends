@@ -121,57 +121,50 @@ public class Friends {
 	// This method gets the shortest Path from two friends and returns the head
 	// of the linked list
 	public String shortestPath(String start, String end) {
-		ArrayList<Integer> counters = new ArrayList<Integer>();
-		ArrayList<Boolean> visited = new ArrayList<Boolean>();
-		ArrayList<String> shortestPaths = new ArrayList<String>();
+		if(start.equalsIgnoreCase(end)){
+			System.out.println("Entered same name twice");
+			return null;
+		}
+		
+		Vertex[] copy = adjLL; 
+		String soFar = ""; 
+		boolean[] visited = new boolean[copy.length];
 		Queue<String> q = new Queue<String>();
-		boolean flag = false;
-
+		String prev = start; 
+		boolean flag = false; 
 		int x = index.get(start);
-		visited.set(x, true);
+		visited[x] = true;
 		q.enqueue(start);
 		while (!q.isEmpty()) {
-			String w = q.dequeue();
-			int j = index.get(w);
-			Neighbor ptr = adjLL[j].neighbors;
+			String curr = q.dequeue();
+			int indexInAdjLL = index.get(curr);
+			if(flag == false){
+				flag = true; 
+				copy[indexInAdjLL].path = copy[indexInAdjLL].path.concat(curr).trim(); 
+			}else{
+				copy[indexInAdjLL].path = copy[indexInAdjLL].path.concat(soFar + "+" + curr).trim();
+			}
+			soFar = copy[indexInAdjLL].path; 
+			Neighbor ptr = copy[indexInAdjLL].neighbors;
 			while (ptr != null) {
-				if (!visited.get(x)) {
-
-					int temp = counters.get(x);
-					temp = temp++;
-					counters.set(x, temp);
-					int currIndex = index.get(ptr); // look over
-					visited.set(currIndex, true);
-					if (!(ptr.name.equals(end))) {
-						ptr.visitedNames = w;
-						if (flag == false) {
-							flag = true;
-							shortestPaths.set(currIndex, ptr.visitedNames);
-						} else {
-							shortestPaths.set(currIndex,
-									"--".concat(ptr.visitedNames));
-						}
+				//if neighbor is not visited
+				int ptrIndex = index.get(ptr.name); 
+				if (visited[ptrIndex]==false) {
+					visited[ptrIndex] = true; 
+					if ((ptr.name.equalsIgnoreCase(end))) {
+						System.out.println("FOUND"); 
+						copy[index.get(ptr.name)].path = copy[index.get(ptr.name)].path.concat(soFar + "+" + ptr.name).trim();
+						return copy[index.get(ptr.name)].path; 
 					}
 					String currName = ptr.name;
 					q.enqueue(currName);
-					ptr = ptr.next;
 				}
+				ptr = ptr.next;
 			}
 
 		}
-		int smallestPathIndex = 0;
-		for (int z = 0; z < counters.size(); z++) {
-			int smallestNum = counters.get(z);
-			if (counters.get(z) < smallestNum) {
-				smallestPathIndex = z;
-				smallestNum = counters.get(z);
 
-			}
-		}
-
-		String shortestPath = shortestPaths.get(smallestPathIndex);
-
-		return shortestPath;
+		return null;
 		/*
 		 * we have to add: if found, break adding the shortest path to a data
 		 * structure
@@ -200,6 +193,7 @@ public class Friends {
 				dfs(v, visit, temp, result, school, ret, subgraphIndex);
 			}
 		}
+		//dfsDriver(); 
 		return result;
 
 	}
@@ -214,10 +208,9 @@ public class Friends {
 				dfs(subgraphIndex.get(e.name), visit, temp, result, school, ret, subgraphIndex);
 			}
 		}
-		//dfsDriver(visit);
 	}
 	
-	// This method checks to see if a person is a "connecot" and then it returns
+	// This method checks to see if a person is a "connector" and then it returns
 	// the name of that person.
 	public String connectors() {
 		ArrayList<Boolean> visitedConnectors=new ArrayList<Boolean>();
