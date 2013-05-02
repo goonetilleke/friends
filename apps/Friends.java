@@ -45,9 +45,7 @@ public class Friends {
 			String school = null;
 			if (inSchool == true) {
 				school = subSplits[2];
-				if (!students.containsKey(school)) { // if school name is
-														// already in the
-														// hashtable
+				if (!students.containsKey(school)) { // if school name is already in the hashtable
 					ArrayList<String> temp = new ArrayList<String>();
 					String nameForHT = name;
 					temp.add(nameForHT);
