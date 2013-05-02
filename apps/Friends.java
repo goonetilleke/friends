@@ -225,8 +225,7 @@ public class Friends {
 
 	}
 
-	public void dfsConnectors(int x, ArrayList<Boolean> visitedConnectors,
-			Vertex[] adjacentLL) {
+	public void dfsConnectors(int x, ArrayList<Boolean> visitedConnectors, Vertex[] adjacentLL) {
 
 		for (int v = 0; v < visitedConnectors.size(); v++) {
 			visitedConnectors.set(v, false);
