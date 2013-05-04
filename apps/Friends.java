@@ -77,8 +77,7 @@ public class Friends {
 
 	// This method will get the subgraph from the built adjLL
 	public ArrayList<Vertex> subgraph(String s) {
-		ArrayList<Vertex> subgraph = new ArrayList<Vertex>(students.get(s)
-				.size());
+		ArrayList<Vertex> subgraph = new ArrayList<Vertex>(students.get(s).size());
 
 		if (students.containsKey(s)) {
 			// make temp array of arraylist in students hashtable
@@ -106,8 +105,7 @@ public class Friends {
 					continue;
 				}
 				if (ppl.get(person).schoolName.equalsIgnoreCase(s)) {
-					subgraph.get(j).neighbors = new Neighbor(person,
-							subgraph.get(j).neighbors);
+					subgraph.get(j).neighbors = new Neighbor(person,subgraph.get(j).neighbors);
 				}
 				ptr = ptr.next;
 			}
@@ -124,45 +122,48 @@ public class Friends {
 			System.out.println("Entered same name twice");
 			return null;
 		}
-
-		Vertex[] copy = adjLL;
-		String soFar = "";
-		boolean[] visited = new boolean[copy.length];
-		Queue<String> q = new Queue<String>();
-		boolean flag = false;
-		int x = index.get(start);
-		visited[x] = true;
-		q.enqueue(start);
-		while (!q.isEmpty()) {
-			String curr = q.dequeue();
-			int indexInAdjLL = index.get(curr);
-			if (flag == false) {
-				flag = true;
-				copy[indexInAdjLL].path = copy[indexInAdjLL].path.concat(curr).trim();
-			} else {
-				copy[indexInAdjLL].path = copy[indexInAdjLL].path.concat(soFar + "+" + curr).trim();
-			}
-			soFar = copy[indexInAdjLL].path;
-			Neighbor ptr = copy[indexInAdjLL].neighbors;
-			while (ptr != null) {
-				// if neighbor is not visited
-				int ptrIndex = index.get(ptr.name);
-				if (visited[ptrIndex] == false) {
-					visited[ptrIndex] = true;
-					if ((ptr.name.equalsIgnoreCase(end))) {
-						System.out.println("FOUND");
-						copy[index.get(ptr.name)].path = copy[index.get(ptr.name)].path.concat(soFar + "+" + ptr.name).trim();
-						return copy[index.get(ptr.name)].path;
+		Queue q = new Queue(); 
+		HashMap<String, Boolean> visited = new HashMap<String, Boolean>(); 
+		HashMap<String, String> prev = new HashMap<String, String>(); 
+		String curr = start;
+		q.enqueue(curr);
+		while(!q.isEmpty()){
+			curr = (String) q.dequeue();
+			if(curr.equalsIgnoreCase(end)){
+				break;
+			}else{
+				int ptrIndex = index.get(curr); 
+				Neighbor ptr = adjLL[ptrIndex].neighbors;
+				while(ptr != null){
+					if(!visited.containsKey(ptr.name)){
+						q.enqueue(ptr.name);
+						visited.put(ptr.name, true);
+						prev.put(ptr.name, curr); 
 					}
-					String currName = ptr.name;
-					q.enqueue(currName);
-				}
-				ptr = ptr.next;
+					ptr = ptr.next; 
+				}//end of inner while
 			}
-
+		}//end of outer while
+		
+		if(!curr.equalsIgnoreCase(end)){
+			return null;
 		}
 		
-		return null;
+		String path = end;
+		String key = prev.get(end);
+		while(!key.equalsIgnoreCase(start)){
+			path = path.concat(key).trim(); 
+			if(!prev.get(key).equalsIgnoreCase(start)){
+				String tmp = key;
+				key = prev.get(tmp);
+			}
+			if(prev.get(key).equalsIgnoreCase(start)){
+				path = path.concat(key); 
+				break; 
+			}
+		}
+		path = path.concat(start); 
+		return path;
 	}
 
 	// Gets the cliques from the original graph
