@@ -115,6 +115,7 @@ public class Friends {
 
 	}
 
+
 	// This method gets the shortest Path from two friends and returns the head
 	// of the linked list
 	public String shortestPath(String start, String end) {
@@ -195,55 +196,59 @@ public class Friends {
 
 	}
 
-	private void dfs(int v, boolean[] visit, ArrayList<Vertex> temp, ArrayList<Vertex> result, String school, boolean[] ret, 
-			HashMap<String, Integer> subgraphIndex) {
-		
-		visit[v] = true;
-		for (Neighbor e = temp.get(v).neighbors; e != null; e = e.next) {
-			// check this if statement
-			if (!visit[subgraphIndex.get(e.name)]) {
-				result.get(v).neighbors = new Neighbor(e.name,
-						result.get(v).neighbors);
-				dfs(subgraphIndex.get(e.name), visit, temp, result, school,
-						ret, subgraphIndex);
-			}
-		}
-	}
 
 	// This method checks to see if a person is a "connector" and then it
 	// returns
 	// the name of that person.
 	public String connectors() {
-		ArrayList<Boolean> visitedConnectors = new ArrayList<Boolean>();
-		Vertex[] adjLLtemp = adjLL;
-		dfsConnectors(1, visitedConnectors, adjLLtemp);
+		boolean[] visited = new boolean[adjLL.length]; 
+		HashMap<String, Boolean> connectors = new HashMap<String, Boolean>(); 
+		ArrayList<String> c = new ArrayList<String>(); 
+		Vertex[] copy = adjLL;
+		int startIndex = 0;
+		for(int v =0; v<visited.length;v++){
+			if(!visited[v]){
+				dfs(v, visited, connectors, copy, c); 
+			}
+		}
+		
+		if(copy[startIndex].back == copy[startIndex].dfsNum){
+			dfs(startIndex+1, visited, connectors, copy, c); 
+		}
+		
 		return null;
-
 	}
-
-	public void dfsConnectors(int x, ArrayList<Boolean> visitedConnectors, Vertex[] adjacentLL) {
-
-		for (int v = 0; v < visitedConnectors.size(); v++) {
-			visitedConnectors.set(v, false);
-
-		}
-		for (int v = 0; v < visitedConnectors.size(); v++) {
-			if (!visitedConnectors.get(v)) {
-				adjacentLL[v].dfsNum = v;
-				adjacentLL[v].back = v;
-				dfsConnectors(v, visitedConnectors, adjacentLL);
+	
+	private void dfs(int v, boolean[] visited, HashMap<String, Boolean> connectors , Vertex[] copy, ArrayList<String> c){
+		visited[v] = true; 
+		copy[v].dfsNum = v+1; 
+		copy[v].back  = copy[v].dfsNum; 
+		for(Neighbor e = copy[v].neighbors; e != null; e=e.next){
+			if(!visited[index.get(e.name)]){
+				dfs(index.get(e.name), visited, connectors, copy, c);
+			}else{
+				int w = index.get(copy[v].neighbors.name); 
+				copy[w].back = Math.min(copy[v].back, copy[w].dfsNum);
+			}
+				
+			if(copy[v].dfsNum > copy[v].neighbors.DFSNum){
+				int w = index.get(copy[v].neighbors.name); 
+				copy[v].back = Math.min(copy[v].back, copy[w].back);
+			}
+			
+			int w = index.get(copy[v].neighbors.name);
+			if(copy[v].dfsNum <= copy[w].back){
+				if(c.contains(copy[v].name)){
+					System.out.println(copy[v].name + "lready in there"); 
+				}else{
+					c.add(copy[v].name);
+				}
+				 
 			}
 		}
+		
 	}
 
-	//
-	private void dfsDriver(boolean[] visited) {
-		for (int i = 0; i < visited.length; i++) {
-			if (!visited[i]) {
-				dfs(i, visited, null, null, null, i);
-			}
-		}
-	}
 
 	private void printBuild() {
 		Vertex[] temp = adjLL;
