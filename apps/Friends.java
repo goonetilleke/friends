@@ -150,21 +150,34 @@ public class Friends {
 			return null;
 		}
 		
-		String path = end;
+		ArrayList<String> path = new ArrayList<String>(); 
 		String key = prev.get(end);
+		path.add(end); 
 		while(!key.equalsIgnoreCase(start)){
-			path = path.concat(key).trim(); 
+			path.add(key);
 			if(!prev.get(key).equalsIgnoreCase(start)){
 				String tmp = key;
 				key = prev.get(tmp);
 			}
 			if(prev.get(key).equalsIgnoreCase(start)){
-				path = path.concat(key); 
+				path.add(key);
 				break; 
 			}
 		}
-		path = path.concat(start); 
-		return path;
+		
+		String result = ""; 
+		path.add(start);  
+		for(int j = path.size()-1; j>= 0; j--){
+			if(j==0){
+				result = result.concat(path.get(j)); 
+			}else{
+				result = result.concat(path.get(j) + "--").trim();
+			}
+			
+		}
+		
+		//System.out.println(result); 
+		return result;
 	}
 
 	// Gets the cliques from the original graph
