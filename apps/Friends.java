@@ -261,7 +261,41 @@ public class Friends {
 		}
 		
 	}
-
+	private void printSubgraph(ArrayList<Vertex> subgraph){
+		
+		//HashMap<String, String> peopleinSubgraph = new HashMap<String, String>(1000, 2.0f);
+		//HashMap<String[], Boolean> visited=new HashMap<String[], Boolean>(1000,2.0f);
+		HashMap<String, String> peopleinSubgraph = new HashMap<String, String>(1000, 2.0f);
+		//String[] subgrapNames=new String[subgraph.size()];
+	//	boolean oppositeExists=false; 
+		
+		for (int i=0; i<subgraph.size(); i++){
+			String name=subgraph.get(i).name;
+			String neighbor=null;
+			if (subgraph.get(i).neighbors!=null){
+			neighbor=subgraph.get(i).neighbors.name;
+			}
+			String temp=name+neighbor;
+			if (!peopleinSubgraph.containsValue(temp)){
+			peopleinSubgraph.put(temp,temp);
+			}
+			String opp=neighbor+name;
+			
+			if (peopleinSubgraph.containsValue(opp)){
+				//do nothing
+			}else{
+				//if (subgraph.get(i).neighbors==null){
+					
+				//}else{
+				System.out.println(name+"|"+neighbor);
+				}
+			}
+			
+		
+		
+		
+	
+	}
 
 	private void printBuild() {
 		Vertex[] temp = adjLL;
