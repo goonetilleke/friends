@@ -1,6 +1,7 @@
 package Friend;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Set;
@@ -111,6 +112,7 @@ public class Friends {
 			}
 
 		}
+		
 		return subgraph;
 
 	}
@@ -164,7 +166,6 @@ public class Friends {
 				break; 
 			}
 		}
-		
 		String result = ""; 
 		path.add(start);  
 		for(int j = path.size()-1; j>= 0; j--){
@@ -176,38 +177,95 @@ public class Friends {
 			
 		}
 		
-		//System.out.println(result); 
 		return result;
 	}
 
 	// Gets the cliques from the original graph
-	public ArrayList<Vertex> cliques(String school) {
-		ArrayList<Vertex> temp = subgraph(school);
-		ArrayList<Vertex> result = new ArrayList<Vertex>(); // change this later
-		boolean[] ret = new boolean[temp.size()];
-		boolean[] visit = new boolean[temp.size()];
-		HashMap<String, Integer> subgraphIndex = new HashMap<String, Integer>(
-				1000, 2.0f);
-
-		// Makes a hashmap for the subgraph. We can easily access a person's
-		// index in the subgraph now.
-		for (int i = 0; i < temp.size(); i++) {
-			subgraphIndex.put(temp.get(i).name, i);
-			// name, inschool, schoolname, nbr
-			Vertex vert = new Vertex(temp.get(i).name, true, school, null);
-			result.add(vert);
+	public void cliques(String school) {
+		ArrayList<Vertex> cliques = new ArrayList<Vertex>();
+		ArrayList<Vertex> subgraph = subgraph(school);
+		//subgraph.retainAll(Collections.singleton(null)); 
+		int count = 1; 
+		System.out.print(subgraph.size()); 
+		HashMap<String, Integer> subgraphIndex = new HashMap<String, Integer>();
+		HashMap<String, Neighbor> nbr = new HashMap<String, Neighbor>(); 
+		int cliqueNum = 1; 
+		int start = 0; 
+		for(int i = 0; i < subgraph.size(); i++){
+			subgraphIndex.put(subgraph.get(i).name, i);
+			nbr.put(subgraph.get(i).name, subgraph.get(i).neighbors); 
 		}
-
-		// goes through every vertex and calls dfs
-		for (int v = 0; v < visit.length; v++) {
-			if (!visit[v]) {
-				dfs(v, visit, temp, result, school, ret, subgraphIndex);
+		boolean[] visited = new boolean[subgraph.size()]; 
+		for(int v = 0; v<visited.length; v++){
+			if(!visited[v]){
+				System.out.println("Starting at " + subgraph.get(v).name);
+				if(start==0){
+					Vertex a = new Vertex(subgraph.get(v).name, true, school, null); 
+					cliques.add(start, a); 
+					cliques.get(start).neighbors = nbr.get(a.name); 
+					start++; 
+				}
+				cliquesDFS(school, v, visited, subgraph, cliques, subgraphIndex, nbr, count);
+				//print the clique
+				//remove all entries from clique once printed
+				printClique(cliques, cliqueNum, count); 
+				start = start -1; 
 			}
 		}
-		// dfsDriver();
-		return result;
+	}
+	
+	private void printClique(ArrayList<Vertex> clique, int cliqueNum, int count){
+		System.out.println("Clique" + cliqueNum + ": ");
+		HashMap<String, String> peopleinSubgraph = new HashMap<String, String>(1000, 2.0f);
+		clique.trimToSize(); 
+		
+		for (int i=0; i < clique.size(); i++){
+			String name=clique.get(i).name;
+			String neighbor=null;
+			if (clique.get(i).neighbors!=null){
+			neighbor=clique.get(i).neighbors.name;
+			}
+			String temp=name+neighbor;
+			if (!peopleinSubgraph.containsValue(temp)){
+			peopleinSubgraph.put(temp,temp);
+			}
+			String opp=neighbor+name;
+			
+			if (peopleinSubgraph.containsValue(opp)){
+				//do nothing
+			}else{
+				//if (subgraph.get(i).neighbors==null){
+					
+				//}else{
+				System.out.println(name+"|"+neighbor);
+				}
+		}//end of for loop
+		cliqueNum++;
+		count = 1; 
+		clique.clear(); 
 
 	}
+	
+	private void cliquesDFS(String school, int v, boolean[] visited, ArrayList<Vertex> subgraph, ArrayList<Vertex> cliques, 
+			HashMap<String, Integer> ind, HashMap<String, Neighbor> nbr, int count){
+		
+		visited[v] = true; 
+		System.out.println("visiting " + subgraph.get(v).name);
+		for(Neighbor e = subgraph.get(v).neighbors; e != null; e=e.next){
+			if(!visited[ind.get(e.name)]){
+				System.out.println(subgraph.get(v).name + "--" + subgraph.get(ind.get(e.name)).toString());
+				//name, inschool, school, nbrs
+				Vertex a = new Vertex(e.name, true, school, null); 
+				cliques.add(a); 
+				//subgraph.get(j).neighbors = new Neighbor(person,subgraph.get(j).neighbors);
+				int h = ind.get(a.name); 
+				cliques.get(count).neighbors = nbr.get(a.name);
+				count++;
+				cliquesDFS(school, ind.get(e.name), visited, subgraph, cliques, ind, nbr, count); 
+			}
+		}
+	}
+	
 
 
 	// This method checks to see if a person is a "connector" and then it
@@ -290,10 +348,6 @@ public class Friends {
 				System.out.println(name+"|"+neighbor);
 				}
 			}
-			
-		
-		
-		
 	
 	}
 
