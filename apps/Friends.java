@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Set;
 
-public class Friends {
+public class FriendsGraph {
 	// Scanner sc;
 	Vertex[] adjLL;
 	// might get rid of ppl
@@ -15,7 +15,7 @@ public class Friends {
 	HashMap<String, ArrayList<String>> students;
 	int numVertex;
 
-	public Friends(int size) {
+	public FriendsGraph(int size) {
 		// this.sc=sc;
 		// initiallized the adjLL with the int from the 1st line read by the
 		// scanner
@@ -77,7 +77,11 @@ public class Friends {
 	}
 
 	// This method will get the subgraph from the built adjLL
+	
 	public ArrayList<Vertex> subgraph(String s) {
+		if (!students.containsKey(s)){
+			return null;
+		}
 		ArrayList<Vertex> subgraph = new ArrayList<Vertex>(students.get(s).size());
 
 		if (students.containsKey(s)) {
@@ -112,7 +116,7 @@ public class Friends {
 			}
 
 		}
-		
+
 		return subgraph;
 
 	}
@@ -147,19 +151,21 @@ public class Friends {
 				}//end of inner while
 			}
 		}//end of outer while
-		
+
 		if(!curr.equalsIgnoreCase(end)){
 			return null;
 		}
-		
+
 		ArrayList<String> path = new ArrayList<String>(); 
 		String key = prev.get(end);
 		path.add(end); 
 		while(!key.equalsIgnoreCase(start)){
 			path.add(key);
+			System.out.println(key);
 			if(!prev.get(key).equalsIgnoreCase(start)){
 				String tmp = key;
 				key = prev.get(tmp);
+				
 			}
 			if(prev.get(key).equalsIgnoreCase(start)){
 				path.add(key);
@@ -174,9 +180,9 @@ public class Friends {
 			}else{
 				result = result.concat(path.get(j) + "--").trim();
 			}
-			
+
 		}
-		
+		//System.out.println(result);
 		return result;
 	}
 
@@ -186,10 +192,10 @@ public class Friends {
 		ArrayList<Vertex> subgraph = subgraph(school);
 		//subgraph.retainAll(Collections.singleton(null)); 
 		int count = 1; 
-		System.out.print(subgraph.size()); 
+		//System.out.print(subgraph.size()); 
 		HashMap<String, Integer> subgraphIndex = new HashMap<String, Integer>();
 		HashMap<String, Neighbor> nbr = new HashMap<String, Neighbor>(); 
-		int cliqueNum = 1; 
+		int cliqueNum = 0; 
 		int start = 0; 
 		for(int i = 0; i < subgraph.size(); i++){
 			subgraphIndex.put(subgraph.get(i).name, i);
@@ -198,7 +204,7 @@ public class Friends {
 		boolean[] visited = new boolean[subgraph.size()]; 
 		for(int v = 0; v<visited.length; v++){
 			if(!visited[v]){
-				System.out.println("Starting at " + subgraph.get(v).name);
+				//System.out.println("Starting at " + subgraph.get(v).name);
 				if(start==0){
 					Vertex a = new Vertex(subgraph.get(v).name, true, school, null); 
 					cliques.add(start, a); 
@@ -208,17 +214,21 @@ public class Friends {
 				cliquesDFS(school, v, visited, subgraph, cliques, subgraphIndex, nbr, count);
 				//print the clique
 				//remove all entries from clique once printed
+				cliqueNum++;
 				printClique(cliques, cliqueNum, count); 
 				start = start -1; 
 			}
 		}
 	}
-	
+
 	private void printClique(ArrayList<Vertex> clique, int cliqueNum, int count){
-		System.out.println("Clique" + cliqueNum + ": ");
+		System.out.println();
+	//	cliqueNum=cliqueNum+2;
+		//System.out.println(cliqueNum);
+		System.out.println("Clique " + cliqueNum + ": ");
 		HashMap<String, String> peopleinSubgraph = new HashMap<String, String>(1000, 2.0f);
 		clique.trimToSize(); 
-		
+
 		for (int i=0; i < clique.size(); i++){
 			String name=clique.get(i).name;
 			String neighbor=null;
@@ -230,30 +240,31 @@ public class Friends {
 			peopleinSubgraph.put(temp,temp);
 			}
 			String opp=neighbor+name;
-			
+
 			if (peopleinSubgraph.containsValue(opp)){
 				//do nothing
 			}else{
 				//if (subgraph.get(i).neighbors==null){
-					
+
 				//}else{
 				System.out.println(name+"|"+neighbor);
 				}
 		}//end of for loop
-		cliqueNum++;
 		count = 1; 
 		clique.clear(); 
+		
+
 
 	}
-	
+
 	private void cliquesDFS(String school, int v, boolean[] visited, ArrayList<Vertex> subgraph, ArrayList<Vertex> cliques, 
 			HashMap<String, Integer> ind, HashMap<String, Neighbor> nbr, int count){
-		
+
 		visited[v] = true; 
-		System.out.println("visiting " + subgraph.get(v).name);
+		//System.out.println("visiting " + subgraph.get(v).name);
 		for(Neighbor e = subgraph.get(v).neighbors; e != null; e=e.next){
 			if(!visited[ind.get(e.name)]){
-				System.out.println(subgraph.get(v).name + "--" + subgraph.get(ind.get(e.name)).toString());
+				//System.out.println(subgraph.get(v).name + "--" + subgraph.get(ind.get(e.name)).toString());
 				//name, inschool, school, nbrs
 				Vertex a = new Vertex(e.name, true, school, null); 
 				cliques.add(a); 
@@ -265,7 +276,7 @@ public class Friends {
 			}
 		}
 	}
-	
+
 
 
 	// This method checks to see if a person is a "connector" and then it
@@ -282,14 +293,14 @@ public class Friends {
 				dfs(v, visited, connectors, copy, c); 
 			}
 		}
-		
+
 		if(copy[startIndex].back == copy[startIndex].dfsNum){
 			dfs(startIndex+1, visited, connectors, copy, c); 
 		}
-		
+
 		return null;
 	}
-	
+
 	private void dfs(int v, boolean[] visited, HashMap<String, Boolean> connectors , Vertex[] copy, ArrayList<String> c){
 		visited[v] = true; 
 		copy[v].dfsNum = v+1; 
@@ -301,12 +312,12 @@ public class Friends {
 				int w = index.get(copy[v].neighbors.name); 
 				copy[w].back = Math.min(copy[v].back, copy[w].dfsNum);
 			}
-				
+
 			if(copy[v].dfsNum > copy[v].neighbors.DFSNum){
 				int w = index.get(copy[v].neighbors.name); 
 				copy[v].back = Math.min(copy[v].back, copy[w].back);
 			}
-			
+
 			int w = index.get(copy[v].neighbors.name);
 			if(copy[v].dfsNum <= copy[w].back){
 				if(c.contains(copy[v].name)){
@@ -314,19 +325,19 @@ public class Friends {
 				}else{
 					c.add(copy[v].name);
 				}
-				 
+
 			}
 		}
-		
+
 	}
-	private void printSubgraph(ArrayList<Vertex> subgraph){
-		
+	public void printSubgraph(ArrayList<Vertex> subgraph){
+
 		//HashMap<String, String> peopleinSubgraph = new HashMap<String, String>(1000, 2.0f);
 		//HashMap<String[], Boolean> visited=new HashMap<String[], Boolean>(1000,2.0f);
 		HashMap<String, String> peopleinSubgraph = new HashMap<String, String>(1000, 2.0f);
 		//String[] subgrapNames=new String[subgraph.size()];
 	//	boolean oppositeExists=false; 
-		
+
 		for (int i=0; i<subgraph.size(); i++){
 			String name=subgraph.get(i).name;
 			String neighbor=null;
@@ -338,17 +349,17 @@ public class Friends {
 			peopleinSubgraph.put(temp,temp);
 			}
 			String opp=neighbor+name;
-			
+
 			if (peopleinSubgraph.containsValue(opp)){
 				//do nothing
 			}else{
 				//if (subgraph.get(i).neighbors==null){
-					
+
 				//}else{
 				System.out.println(name+"|"+neighbor);
 				}
 			}
-	
+
 	}
 
 	private void printBuild() {
