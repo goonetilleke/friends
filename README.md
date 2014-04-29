@@ -1,4 +1,3 @@
-friends
-=======
+FINAL PROJECT FOR DATA STRUCTURES
 
-CS Project 112
+Worked on a friendship graph using the Java programming language. 
